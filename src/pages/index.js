@@ -1,12 +1,12 @@
-import Landing from "./Landing";
-import LogIn from "./LogIn";
-import Registration from "./Registration";
-import UserHome from "./UserHome";
-import UserInfo from "./UserInfo";
-import AdminHome from "./AdminHome";
-import AdminInfo from "./AdminInfo";
-import AdminStats from "./AdminStats";
-import LogOut from "./LogOut";
+import Landing from "./Landing.page";
+import LogIn from "./LogIn.page";
+import Registration from "./Registration.page";
+import UserHome from "./UserHome.page";
+import UserInfo from "./UserInfo.page";
+import AdminHome from "./AdminHome.page";
+import AdminInfo from "./AdminInfo.page";
+import AdminStats from "./AdminStats.page";
+import LogOut from "./LogOut.page";
 
 export const pages = {
     Landing,
