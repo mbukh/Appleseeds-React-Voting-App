@@ -1,4 +1,5 @@
 import { useState } from "react";
+import UserMenu from "./UserMenu.component";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,11 +11,10 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import UserMenu from "./UserMenu.component";
 
 const pages = ["Home", "About"];
 
-function Header({ user, logOutHandler }) {
+function Header({ user, logOutHandler, setPage }) {
     const [anchorElNav, setAnchorElNav] = useState(null);
 
     const handleOpenNavMenu = (event) => {
@@ -134,7 +134,11 @@ function Header({ user, logOutHandler }) {
                         ))}
                     </Box>
 
-                    <UserMenu user={user} logOutHandler={logOutHandler} />
+                    <UserMenu
+                        user={user}
+                        logOutHandler={logOutHandler}
+                        setPage={setPage}
+                    />
                 </Toolbar>
             </Container>
         </AppBar>

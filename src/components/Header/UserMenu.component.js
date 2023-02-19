@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { pageNames } from "../../constants";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -9,9 +10,9 @@ import MenuItem from "@mui/material/MenuItem";
 
 const settingsAuth = ["Profile", "Logout"];
 const settingsAdmin = ["Profile", "Dashboard", "Votes", "Logout"];
-const settings = ["Login"];
+const settings = ["Registration", "Login"];
 
-const UserMenu = ({ user, logOutHandler }) => {
+const UserMenu = ({ user, logOutHandler, setPage }) => {
     const [anchorElUser, setAnchorElUser] = useState(null);
 
     const auth = !!user?.id;
@@ -22,8 +23,20 @@ const UserMenu = ({ user, logOutHandler }) => {
     };
     const handleCloseUserMenu = (e) => {
         setAnchorElUser(null);
-        if (e.target.innerText.toLowerCase() === "logout") logOutHandler();
-        if (e.target.innerText.toLowerCase() === "Login") setPage(pages.Login);
+        const menuItem = e.target.innerText.toLowerCase();
+        console.log(menuItem);
+        console.log(pageNames.logout);
+        switch (menuItem) {
+            case pageNames.logout:
+                logOutHandler();
+                console.log("gere");
+                break;
+            default:
+                setPage(pageNames[menuItem]);
+                console.log("gere2");
+
+                break;
+        }
     };
 
     return (
