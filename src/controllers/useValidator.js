@@ -5,7 +5,7 @@ import * as Yup from "yup";
 const useValidator = ({
     ignoreConfirmPassword = false,
     ignoreAcceptTerms = false,
-}) => {
+} = {}) => {
     const validationSchema = Yup.object().shape({
         fullname: Yup.string()
             .required("Fullname is required")
@@ -19,7 +19,7 @@ const useValidator = ({
             .min(6, "Password must be at least 6 characters")
             .max(40, "Password must not exceed 40 characters"),
         confirmPassword:
-            ignoreConfirmPassword &&
+            !ignoreConfirmPassword &&
             Yup.string()
                 .required("Confirm Password is required")
                 .oneOf(
@@ -27,7 +27,7 @@ const useValidator = ({
                     "Confirm Password does not match"
                 ),
         acceptTerms:
-            ignoreAcceptTerms &&
+            !ignoreAcceptTerms &&
             Yup.bool().oneOf([true], "Accept Terms is required"),
     });
 

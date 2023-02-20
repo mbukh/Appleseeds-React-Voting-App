@@ -7,24 +7,21 @@ import { components } from "./components/";
 import auth from "./services/auth.service";
 import { useState, useEffect } from "react";
 
-const userData = localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user"))
-    : null;
-
 function App() {
-    const [user, setUser] = useState(userData);
+    const [user, setUser] = useState(auth.currentUser());
     const [page, setPage] = useState(pageNames.landing);
+    const { id: userId, email, name } = auth.currentUser();
+
     let PageContent;
 
     useEffect(() => {
-        if (!user) setPage(pageNames.landing);
-        else setPage(pageNames.userhome);
-    }, [user]);
+        userId && setUser({ id: userId, email, name });
+    }, [userId, email, name]);
 
     const logOutHandler = () => {
         auth.logOut();
         setUser(null);
-        console.log("here");
+        console.log("User logged out");
     };
 
     switch (page) {
@@ -36,17 +33,27 @@ function App() {
                 <pages.LogIn
                     pageNames={pageNames}
                     setPage={setPage}
-                    setUser={setUser}
                     user={user}
                 />
             );
-            console.log("333");
             break;
         case pageNames.registration:
-            PageContent = <pages.Registration user={user} />;
+            PageContent = (
+                <pages.Registration
+                    pageNames={pageNames}
+                    setPage={setPage}
+                    user={user}
+                />
+            );
             break;
         case pageNames.userhome:
-            PageContent = <pages.UserHome user={user} />;
+            PageContent = (
+                <pages.UserHome
+                    pageNames={pageNames}
+                    setPage={setPage}
+                    user={user}
+                />
+            );
             break;
         case pageNames.userinfo:
             PageContent = <pages.UserInfo user={user} />;

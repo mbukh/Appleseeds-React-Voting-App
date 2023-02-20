@@ -17,6 +17,8 @@ const pages = ["Home", "About"];
 function Header({ user, logOutHandler, setPage }) {
     const [anchorElNav, setAnchorElNav] = useState(null);
 
+    console.log("Render header component");
+
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };

@@ -35,8 +35,7 @@ const SimpleBackdrop = ({
             open={open}
             onClick={handleClose}
         >
-            {message && children}
-            {!message && <CircularProgress color="inherit" />}
+            {message ? children : <CircularProgress color="inherit" />}
         </Backdrop>
     );
 };

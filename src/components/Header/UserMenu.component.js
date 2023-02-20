@@ -8,33 +8,33 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
-const settingsAuth = ["Profile", "Logout"];
-const settingsAdmin = ["Profile", "Dashboard", "Votes", "Logout"];
-const settings = ["Registration", "Login"];
-
 const UserMenu = ({ user, logOutHandler, setPage }) => {
     const [anchorElUser, setAnchorElUser] = useState(null);
 
-    const auth = !!user?.id;
+    const auth = user.id;
     const isAdmin = auth && user.type === "admin";
+
+    const menuUser = ["Profile", "Userhome", "Logout"];
+    const menuAdmin = ["Profile", "Dashboard", "Votes", "Logout"];
+    const menuGuest = ["Registration", "Login"];
+
+    console.log("Render usermenu component");
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
+
     const handleCloseUserMenu = (e) => {
         setAnchorElUser(null);
         const menuItem = e.target.innerText.toLowerCase();
-        console.log(menuItem);
-        console.log(pageNames.logout);
+        if (!menuItem) return;
+        console.log("Menu item:", menuItem);
         switch (menuItem) {
             case pageNames.logout:
                 logOutHandler();
-                console.log("gere");
                 break;
             default:
                 setPage(pageNames[menuItem]);
-                console.log("gere2");
-
                 break;
         }
     };
@@ -44,7 +44,7 @@ const UserMenu = ({ user, logOutHandler, setPage }) => {
             {auth || (
                 /* Guest user  */
                 <Box sx={{ flexGrow: 0 }}>
-                    <Tooltip title="Login">
+                    <Tooltip title="User menu">
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                             <Avatar />
                         </IconButton>
@@ -65,7 +65,7 @@ const UserMenu = ({ user, logOutHandler, setPage }) => {
                         open={Boolean(anchorElUser)}
                         onClose={handleCloseUserMenu}
                     >
-                        {settings.map((setting) => (
+                        {menuGuest.map((setting) => (
                             <MenuItem
                                 key={setting}
                                 onClick={handleCloseUserMenu}
@@ -82,9 +82,18 @@ const UserMenu = ({ user, logOutHandler, setPage }) => {
             {auth && (
                 /* Registered user  */
                 <Box sx={{ flexGrow: 0 }}>
-                    <Tooltip title="Open settings">
+                    <Tooltip title="User menu">
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                            <Avatar alt={user.name} src={user.image || ""} />
+                            {user.image ? (
+                                <Avatar
+                                    alt={user.name}
+                                    src={user.image || ""}
+                                />
+                            ) : (
+                                <Avatar alt={user.name} src={user.image || ""}>
+                                    {user.name[0]}
+                                </Avatar>
+                            )}
                         </IconButton>
                     </Tooltip>
                     <Menu
@@ -103,18 +112,16 @@ const UserMenu = ({ user, logOutHandler, setPage }) => {
                         open={Boolean(anchorElUser)}
                         onClose={handleCloseUserMenu}
                     >
-                        {(isAdmin ? settingsAdmin : settingsAuth).map(
-                            (setting) => (
-                                <MenuItem
-                                    key={setting}
-                                    onClick={handleCloseUserMenu}
-                                >
-                                    <Typography textAlign="center">
-                                        {setting}
-                                    </Typography>
-                                </MenuItem>
-                            )
-                        )}
+                        {(isAdmin ? menuAdmin : menuUser).map((setting) => (
+                            <MenuItem
+                                key={setting}
+                                onClick={handleCloseUserMenu}
+                            >
+                                <Typography textAlign="center">
+                                    {setting}
+                                </Typography>
+                            </MenuItem>
+                        ))}
                     </Menu>
                 </Box>
             )}

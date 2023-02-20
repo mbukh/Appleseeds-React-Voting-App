@@ -1,13 +1,20 @@
-import React from "react";
+import { useEffect } from "react";
 import Carousel from "react-material-ui-carousel";
 import { Paper, Button } from "@mui/material";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import VoteContainer from "../styles/styled/UserHome.styled";
 
-const UserHome = (props) => {
+const UserHome = ({ user, pageNames, setPage }) => {
     const voteClickHandler = (key) => {
         console.log(key);
     };
+
+    console.log("Render userhome page");
+
+    useEffect(() => {
+        console.log(user);
+        // !user && setPage(pageNames.landing);
+    }, [pageNames.landing, setPage, user]);
 
     var items = [
         {

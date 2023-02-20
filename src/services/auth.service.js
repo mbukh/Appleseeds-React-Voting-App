@@ -17,7 +17,7 @@ const auth = (userData) => {
                 email: userLoggedIn.email,
             })
         );
-        return true;
+        return userLoggedIn;
     }
     return false;
 };
@@ -26,6 +26,11 @@ const logOut = () => {
     localStorage.removeItem("user");
 };
 
-const a = { auth, logOut };
+const currentUser = () =>
+    localStorage.getItem("user")
+        ? JSON.parse(localStorage.getItem("user"))
+        : { id: null, name: null, email: null };
 
-export default a;
+const exportObject = { auth, logOut, currentUser };
+
+export default exportObject;

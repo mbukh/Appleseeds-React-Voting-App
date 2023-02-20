@@ -1,54 +1,57 @@
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
+import { useState, useEffect } from "react";
+import { Controller } from "react-hook-form";
+// import auth from "../services/auth.service";
+import useValidator from "../controllers/useValidator";
 import {
     Paper,
     Box,
     Grid,
     TextField,
-    Typography,
     FormControlLabel,
     Checkbox,
+    Typography,
     Button,
+    Stack,
+    Alert,
 } from "@mui/material/";
+import SimpleBackdrop from "../components/simpleBackdrop.component";
 
-const Registration = () => {
-    const onSubmit = (data) => {
-        console.log(JSON.stringify(data, null, 2));
+const Registration = ({ setPage, pageNames, user }) => {
+    const [isBackDropOpened, setIsBackDropOpened] = useState(false);
+
+    const { register, control, handleSubmit, errors } = useValidator();
+
+    console.log("Render register page");
+
+    const onSubmit = (formUserData) => {
+        // const loggedUser = auth.auth(formUserData);
+        const loggedUser = false;
+        setIsBackDropOpened(true);
+        if (!loggedUser) {
+            console.log("Unable to register a new user");
+        } else {
+            // console.log(JSON.stringify(formUserData, null, 2));
+            setTimeout(() => {
+                setIsBackDropOpened(false);
+                setPage(pageNames.userhome);
+            }, 900);
+            console.log("Logged successfully");
+            console.log("Redirect to registered user homepage");
+        }
     };
 
-    const validationSchema = Yup.object().shape({
-        fullname: Yup.string()
-            .required("Fullname is required")
-            .min(3, "Fullname must be at least 3 characters")
-            .max(40, "Fullname must not exceed 40 characters"),
-        email: Yup.string()
-            .required("Email is required")
-            .email("Email is invalid"),
-        password: Yup.string()
-            .required("Password is required")
-            .min(6, "Password must be at least 6 characters")
-            .max(40, "Password must not exceed 40 characters"),
-        confirmPassword: Yup.string()
-            .required("Confirm Password is required")
-            .oneOf(
-                [Yup.ref("password"), null],
-                "Confirm Password does not match"
-            ),
-        acceptTerms: Yup.bool().oneOf([true], "Accept Terms is required"),
-    });
-
-    const {
-        register,
-        control,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
-        resolver: yupResolver(validationSchema),
-    });
+    useEffect(() => {
+        user.id && setPage(pageNames.userhome);
+    }, [pageNames.userhome, setPage, user]);
 
     return (
         <>
+            <SimpleBackdrop
+                isOpened={isBackDropOpened}
+                setIsBackDropOpened={setIsBackDropOpened}
+            >
+                <Alert severity="error">Registration closed.</Alert>
+            </SimpleBackdrop>
             <Paper>
                 <Box px={3} py={2}>
                     <Typography variant="h6" align="center" margin="dense">
@@ -156,16 +159,44 @@ const Registration = () => {
                             </Typography>
                         </Grid>
                     </Grid>
-
-                    <Box mt={3}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleSubmit(onSubmit)}
-                        >
-                            Register
-                        </Button>
-                    </Box>
+                    <Grid container spacing={1}>
+                        <Grid item xs={12} sm={12}>
+                            <Stack direction="row" justifyContent="center">
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleSubmit(onSubmit)}
+                                >
+                                    Register
+                                </Button>
+                            </Stack>
+                            <br />
+                            <br />
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <Stack direction="row" justifyContent="center">
+                                <Typography
+                                    variant="inherit"
+                                    color="textSecondary"
+                                >
+                                    Already got an account?
+                                </Typography>
+                            </Stack>
+                            <br />
+                            <Stack direction="row" justifyContent="center">
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setPage(pageNames.login);
+                                    }}
+                                >
+                                    Login
+                                </Button>
+                            </Stack>
+                        </Grid>
+                    </Grid>
                 </Box>
             </Paper>
         </>

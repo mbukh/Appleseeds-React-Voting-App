@@ -14,25 +14,33 @@ import {
 import SimpleBackdrop from "../components/simpleBackdrop.component";
 
 const LogIn = ({ setPage, pageNames, user }) => {
-    const [userLoggedIn, setUserLoggedIn] = useState(false);
     const [isBackDropOpened, setIsBackDropOpened] = useState(false);
 
     const { register, handleSubmit, errors } = useValidator({
-        confirmPassword: true,
+        ignoreConfirmPassword: true,
         ignoreAcceptTerms: true,
     });
 
-    const onSubmit = (data) => {
-        const userExists = auth.auth(data);
-        if (!userExists) {
-            setIsBackDropOpened(true);
+    console.log("Render login page");
+
+    const onSubmit = (formUserData) => {
+        const loggedUser = auth.auth(formUserData);
+        setIsBackDropOpened(true);
+        if (!loggedUser) {
+            console.log("User not found");
+        } else {
+            setTimeout(() => {
+                setIsBackDropOpened(false);
+                setPage(pageNames.userhome);
+            }, 900);
+            console.log("Logged successfully");
+            console.log("Redirect to user homepage");
         }
-        userExists && setUserLoggedIn(userExists);
     };
 
     useEffect(() => {
-        (user || userLoggedIn) && setPage(pageNames.userhome);
-    }, [userLoggedIn, pageNames.userhome, setPage, user]);
+        user.id && setPage(pageNames.userhome);
+    }, [pageNames.userhome, setPage, user]);
 
     return (
         <>
@@ -42,7 +50,7 @@ const LogIn = ({ setPage, pageNames, user }) => {
             >
                 <Alert severity="error">User not found.</Alert>
             </SimpleBackdrop>
-            <Paper>
+            <Paper elevation={4}>
                 <Box px={3} py={2}>
                     <Typography variant="h6" align="center" margin="dense">
                         Log In to Vote
@@ -107,8 +115,19 @@ const LogIn = ({ setPage, pageNames, user }) => {
                                     Login
                                 </Button>
                             </Stack>
+                            <br />
+                            <br />
                         </Grid>
                         <Grid item xs={12} sm={12}>
+                            <Stack direction="row" justifyContent="center">
+                                <Typography
+                                    variant="inherit"
+                                    color="textSecondary"
+                                >
+                                    Don't have an account?
+                                </Typography>
+                            </Stack>
+                            <br />
                             <Stack direction="row" justifyContent="center">
                                 <Button
                                     variant="contained"
